@@ -109,10 +109,10 @@ void preProcessing(){
 solutionType shiftCity(solutionType sol){
   srand (time(NULL));
   cityType aux;
-  int city_1 = rand()%(sol.route.size()+1);
+  int city_1 = rand()%(sol.route.size());
   int city_2;
   do{
-    city_2 = rand() %(sol.route.size()+1);
+    city_2 = rand() %(sol.route.size());
   }while(city_1==city_2);
   aux = sol.route[city_1];
   sol.route[city_1] = sol.route[city_2];
