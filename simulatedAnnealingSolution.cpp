@@ -175,7 +175,7 @@ int main(int argc, char const *argv[]) {
   float mean;
   float SAmax = 100000;
   float alpha = 0.99;
-  float T0 = 10000;
+  float T0 = 10000000;
   solutionType s1;
   readFile();
   preProcessing();
