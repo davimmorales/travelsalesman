@@ -2,21 +2,60 @@
 #include <fstream>
 #include <vector>
 #include <stdlib.h>
+#include <math.h>
+#include <algorithm>
+#include <time.h>
 
 using namespace std;
 
-char nameRead[] = "berlin52.tsp";//instance name
+char nameRead[] = "pr76.tsp";//instance name
 
 typedef struct{
   int id;
-  int visited;
   float x;
   float y;
 }cityType;
 
+typedef struct{
+  float of;
+  vector<cityType> route;
+}solutionType;
+
 vector<cityType> cities;
-int count;
+int counter;
 float **distances;
+
+/************************************************************************************
+*** Method: calculateOF(solutionType solution)                                     ***
+*** Function: calculates objective function of a certain solution                  ***
+*************************************************************************************/
+float calculateOF(solutionType solution){
+  float total = 0;//total distance of route
+  for (size_t i = 1; i < solution.route.size(); i++) {
+    total += distances[solution.route[i].id][solution.route[i-1].id];
+  }
+  return total;
+}
+
+/************************************************************************************
+*** Method: generateInitial()                                                    ***
+*** Function: generates initial solutionType                                     ***
+*************************************************************************************/
+solutionType generateInitial(){
+  solutionType sol;
+  sol.route = cities;
+  random_shuffle( sol.route.begin(), sol.route.end() );
+  sol.of = calculateOF(sol);
+  return sol;
+}
+
+/************************************************************************************
+*** Method: calculateDistance(float a, float b, float x, float y                 ***
+*** Function: calculates distance between two points                             ***
+*************************************************************************************/
+float calculateDistance(float a, float b, float x, float y){
+  return sqrt((a-x)*(a-x)+(b-y)*(b-y));
+}
 
 /************************************************************************************
 *** Method: readFile()                                                           ***
@@ -24,52 +63,117 @@ float **distances;
 *************************************************************************************/
 void readFile()
 {
-  count = 0;
+  counter = 0;
   cityType dummy;
 
-  ifstream instaceFile;
-  instaceFile.open(nameRead, ios::in);
+  ifstream instanceFile;
+  instanceFile.open(nameRead, ios::in);
 
-  if (!instaceFile) {
-    printf("Wasn't able to open file.\n");
+  if (!instanceFile) {
+    printf("File not found.\n");
     //     getchar();
     exit(1);
   }
 
-  if(instaceFile.is_open()){
-    while(!instaceFile.eof()){
-      instaceFile >> dummy.id;
-      instaceFile >> dummy.x;
-      instaceFile >> dummy.y;
-      dummy.visited = 0;
+  if(instanceFile.is_open()){
+    while(!instanceFile.eof()){
+      instanceFile >> dummy.id;
+      instanceFile >> dummy.x;
+      instanceFile >> dummy.y;
       cities.push_back(dummy);
-      count++;
+      counter++;
     }
   }
 
-  instaceFile.close();
+  instanceFile.close();
 }
-
-
 
 /************************************************************************************
 *** Method: preProcessing()                                                      ***
 *** Function: processes data and creates distances matrix                        ***
 *************************************************************************************/
 void preProcessing(){
-  distances = new float*[count];
-  for (size_t i = 0; i < count; i++) {
-    distances[i] = new float[count];
-    for (size_t j = 0; j < count; j++) {
+  distances = new float*[counter];
+  for (size_t i = 0; i < counter; i++) {
+    distances[i] = new float[counter];
+    for (size_t j = 0; j < counter; j++) {
       distances[i][j] = calculateDistance(cities[i].x, cities[i].y,
-      cities[j].x, cities[j].y);
+        cities[j].x, cities[j].y);
+      }
     }
   }
 
-
+/************************************************************************************
+*** Method: shiftCity(solutionType sol)                                          ***
+*** Function: shifts two random cities                                                  ***
+*************************************************************************************/
+solutionType shiftCity(solutionType sol){
+  srand (time(NULL));
+  cityType aux;
+  int city_1 = rand()%(sol.route.size()+1);
+  int city_2;
+  do{
+    city_2 = rand() %(sol.route.size()+1);
+  }while(city_1==city_2);
+  aux = sol.route[city_1];
+  sol.route[city_1] = sol.route[city_2];
+  sol.route[city_2] = aux;
+  return sol;
 }
 
+solutionType SA(solutionType initial, float T0, float SAmax, float alpha) {
+  float iterT = 0;
+  float T = T0;
+  float delta;
+  solutionType neighbor;
+  solutionType solution;
+  solutionType best;
+  int count = 0;
+  solution = initial;
+  best = solution;
+  while (T>0.0001){
+    while (iterT<SAmax) {
+      iterT++;
+      count ++;
+      neighbor = solution;
+      neighbor = shiftCity(neighbor);
+      neighbor.of = calculateOF(neighbor);
+      delta = solution.of - neighbor.of;
+      // cout << delta << endl;
+      if(delta>=0){
+        solution = neighbor;
+        if(solution.of<best.of)
+          best = solution;
+      }
+      else{
+        float x = ((float)(rand()%10000)/10000.0);
+        float expoente = (delta/T);
+        // int e = int (expoente+0.5);
+        // cout << exp(e) << endl;
+        if(x<(exp(expoente)))
+          solution = neighbor;
+      }
+    }
+    T *= alpha;
+    iterT = 0;
+      cout << "T = " << T << "OF = " << solution.of << " bestOF " << best.of << endl;
+      // printf("\nT = %.4f \t OF = %d \t bestOF = %d", T, solution.of, best.of);
+  }
+  cout << endl;
+  return best;
+}
+
+
 int main(int argc, char const *argv[]) {
+  srand (time(NULL));
+  float SAmax = 100000;//n_dias*n_equipes*Obras.size();
+  float alpha = 0.95;
+  float T0 = 1000000;
+  solutionType s1;
   readFile();
+  preProcessing();
+  s1 = generateInitial();
+  s1 = SA(s1, T0, SAmax, alpha);
+  cout << "Best: " << s1.of << endl;
   return 0;
 }
