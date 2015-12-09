@@ -84,7 +84,6 @@ void readFile()
       counter++;
     }
   }
-
   instanceFile.close();
 }
 
@@ -148,32 +147,47 @@ solutionType SA(solutionType initial, float T0, float SAmax, float alpha) {
       else{
         float x = ((float)(rand()%10000)/10000.0);
         float expoente = (delta/T);
-        // int e = int (expoente+0.5);
-        // cout << exp(e) << endl;
         if(x<(exp(expoente)))
           solution = neighbor;
       }
     }
     T *= alpha;
     iterT = 0;
-      cout << "T = " << T << "OF = " << solution.of << " bestOF " << best.of << endl;
-      // printf("\nT = %.4f \t OF = %d \t bestOF = %d", T, solution.of, best.of);
+      cout << "T = " <<  T << "\tOF = " << solution.of << "\tbestOF " << best.of << endl;
   }
   cout << endl;
   return best;
 }
 
+void printSolution(solutionType sol){
+  cout << "Best solution found: " << endl;
+  cout << "OF = " << sol.of << endl;
+  cout << "Route: " << endl;
+  for (size_t i = 0; i < sol.route.size(); i++) {
+    cout << sol.route[i].id << " ";
+  }
+  cout << endl;
+}
+
 
 int main(int argc, char const *argv[]) {
   srand (time(NULL));
-  float SAmax = 100000;//n_dias*n_equipes*Obras.size();
-  float alpha = 0.95;
-  float T0 = 1000000;
+  float mean;
+  float SAmax = 100000;
+  float alpha = 0.99;
+  float T0 = 10000;
   solutionType s1;
   readFile();
   preProcessing();
   s1 = generateInitial();
   s1 = SA(s1, T0, SAmax, alpha);
-  cout << "Best: " << s1.of << endl;
+  printSolution(s1);
+
+  for (size_t i = 0; i < 1000; i++) {
+    random_shuffle( s1.route.begin(), s1.route.end() );
+    mean += calculateOF(s1);
+  }
+  cout << "Mean solution: " << mean/1000 << endl;
+
   return 0;
 }
