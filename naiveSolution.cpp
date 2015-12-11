@@ -4,24 +4,29 @@
 #include <stdlib.h>
 #include <math.h>
 #include <algorithm>
+#include <limits>
 #include <time.h>
 
 using namespace std;
 
 char nameRead[] = "pr76.tsp";//instance name
 
-typedef struct{
+class CityType{
+public:
   int id;
   float x;
   float y;
-}cityType;
+  bool operator<( const CityType &other) const {
+    return id < other.id;
+  }
+};
 
 typedef struct{
   float of;
-  vector<cityType> route;
+  vector<CityType> route;
 }solutionType;
 
-vector<cityType> cities;
+vector<CityType> cities;
 int counter;
 float **distances;
 
@@ -64,7 +69,7 @@ float calculateDistance(float a, float b, float x, float y){
 void readFile()
 {
   counter = 0;
-  cityType dummy;
+  CityType dummy;
 
   ifstream instanceFile;
   instanceFile.open(nameRead, ios::in);
@@ -108,7 +113,7 @@ void preProcessing(){
 *************************************************************************************/
 solutionType shiftCity(solutionType sol){
   srand (time(NULL));
-  cityType aux;
+  CityType aux;
   int city_1 = rand()%(sol.route.size());
   int city_2;
   do{
@@ -167,25 +172,21 @@ void printSolution(solutionType sol){
   cout << endl;
 }
 
+// 1) Consider city 1 as the starting and ending point.
+// 2) Generate all (n-1)! Permutations of cities.
+// 3) Calculate cost of every permutation and keep track of minimum cost permutation.
+// 4) Return the permutation with minimum cost.
 
 int main(int argc, char const *argv[]) {
   srand (time(NULL));
-  float mean;
-  float SAmax = 100000;
-  float alpha = 0.99;
-  float T0 = 10000000;
   solutionType s1;
   readFile();
   preProcessing();
-  s1 = generateInitial();
-  s1 = SA(s1, T0, SAmax, alpha);
+  s1.route = cities;
+  float val = std::numeric_limits<float>::max();
+  do {
+    val = min( calculateOF( s1 ), val);
+  } while ( std::next_permutation(s1.route.begin(), s1.route.end()) );
   printSolution(s1);
-
-  for (size_t i = 0; i < 1000; i++) {
-    random_shuffle( s1.route.begin(), s1.route.end() );
-    mean += calculateOF(s1);
-  }
-  cout << "Mean solution: " << mean/1000 << endl;
-
   return 0;
 }
