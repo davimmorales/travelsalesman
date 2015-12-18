@@ -11,7 +11,7 @@ int main(int argc, char const *argv[]) {
   srand (time(NULL));
   float mean;
   float SAmax = 100000;
-  float alpha = 0.99;
+  float alpha = 0.85;
   float T0 = 10000000;
   cout << "SAmax: " << SAmax << ", Alpha: " << alpha << ", T0: " << T0 << endl;
   solutionType s1;

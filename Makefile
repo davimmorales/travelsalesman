@@ -27,4 +27,4 @@ backtrackSolution-berlin52: backtrackSolution
 	bin/backtrackSolution instances/berlin52.tsp
 
 backtrackSolution-littleboy: backtrackSolution
-	bin/naiveSolution instances/littleboy.tsp
+	bin/backtrackSolution instances/littleboy.tsp

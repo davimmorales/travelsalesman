@@ -111,9 +111,13 @@ void preProcessing( ) {
   distances = new float*[ counter ];
   for( size_t i = 0; i < counter; i++ ) {
     distances[ i ] = new float[ counter ];
+  }
+  for( size_t i = 0; i < counter; i++ ) {
     for( size_t j = 0; j < counter; j++ ) {
-      distances[ i ][ j ] = calculateDistance( cities[ i ].x, cities[ i ].y,
+      float dist = calculateDistance( cities[ i ].x, cities[ i ].y,
                                                cities[ j ].x, cities[ j ].y );
+      distances[ i ][ j ] = dist;
+      distances[ j ][ i ] = dist;
 //      printf("%.8f ", distances[i][j]);
     }
 //    cout << endl;

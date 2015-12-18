@@ -8,11 +8,13 @@
 float minDist = std::numeric_limits<float>::max();
 vector<CityType> best;
 void permute(int l, int r, float dist){
-  if(dist >= minDist){
+  if(dist >= minDist ){
     return;
   }
-  if(l == r-1){
-    dist += distances[r][0];
+  if(l == r){
+    float total = calculateOF(cities);
+
+    dist += distances[cities[r].id][cities[0].id] + distances[cities[l].id][cities[l-1].id];
     if(dist < minDist){
       best = cities;
       best.push_back(best.front());
@@ -21,7 +23,8 @@ void permute(int l, int r, float dist){
   }else {
     for (size_t i = l; i <= r; i++){
       swap(cities[l], cities[i]);
-      float d2 = distances[cities[l].id][cities[l-1].id];
+
+      float d2 = distances[cities[l].id][cities[max( l-1, 0)].id];
       permute(l+1, r, dist+d2);
       swap(cities[i], cities[l]);
     }
@@ -54,7 +57,10 @@ int main( int argc, char const *argv[] ) {
 //     }
 //
 //   } while( std::next_permutation( cities.begin( ), cities.end( ) ) );
-  permute(0,counter-1,0.0);
+  permute(0,cities.size()-1,0.0);
+  s1.route = best;
+  s1.of = calculateOF(best);
+  cout << "Mindist = " << minDist << endl;
   std::cout << "TIME: " << float( clock () - begin_time ) /  CLOCKS_PER_SEC <<endl;
   printSolution( s1 );
 
