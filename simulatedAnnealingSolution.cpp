@@ -13,6 +13,7 @@ int main(int argc, char const *argv[]) {
   float SAmax = 100000;
   float alpha = 0.99;
   float T0 = 10000000;
+  cout << "SAmax: " << SAmax << ", Alpha: " << alpha << ", T0: " << T0 << endl;
   solutionType s1;
   readFile();
   preProcessing();
@@ -20,6 +21,7 @@ int main(int argc, char const *argv[]) {
   s1 = generateInitial();
   s1 = SA(s1, T0, SAmax, alpha);
   std::cout << "TIME: " << float( clock () - begin_time ) /  CLOCKS_PER_SEC <<endl;
+
   printSolution(s1);
   for (size_t i = 0; i < 1000; i++) {
     random_shuffle( s1.route.begin(), s1.route.end() );
@@ -43,9 +45,9 @@ solutionType SA( const solutionType &initial, float T0, float SAmax, float alpha
   solution = initial;
   best = solution;
   while( T > 0.0001 ) {
+    count++;
     while( iterT < SAmax ) {
       iterT++;
-      count++;
       neighbor = solution;
       neighbor = shiftCity( neighbor );
       neighbor.of = calculateOF( neighbor.route );
@@ -69,6 +71,7 @@ solutionType SA( const solutionType &initial, float T0, float SAmax, float alpha
     iterT = 0;
     // cout << "T = " << T << "\tOF = " << solution.of << "\tbestOF " << best.of << endl;
   }
+  cout << "Count: " << count << endl;
   // cout << endl;
   return( best );
 }
