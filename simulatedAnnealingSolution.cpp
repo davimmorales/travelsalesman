@@ -11,24 +11,24 @@ int main(int argc, char const *argv[]) {
   srand (time(NULL));
   float mean;
   float SAmax = 100000;
-  float alpha = 0.85;
+  float alpha = 0.99;
   float T0 = 10000000;
-  cout << "SAmax: " << SAmax << ", Alpha: " << alpha << ", T0: " << T0 << endl;
+  // cout << "SAmax: " << SAmax << ", Alpha: " << alpha << ", T0: " << T0 << endl;
   solutionType s1;
   readFile();
   preProcessing();
   const clock_t begin_time = clock();
   s1 = generateInitial();
   s1 = SA(s1, T0, SAmax, alpha);
-  std::cout << "TIME: " << float( clock () - begin_time ) /  CLOCKS_PER_SEC <<endl;
+  // std::cout << "TIME: " << float( clock () - begin_time ) /  CLOCKS_PER_SEC <<endl;
 
   printSolution(s1);
-  for (size_t i = 0; i < 1000; i++) {
-    random_shuffle( s1.route.begin(), s1.route.end() );
-    mean += calculateOF(s1.route);
-  }
+  // for (size_t i = 0; i < 1000; i++) {
+  //   random_shuffle( s1.route.begin(), s1.route.end() );
+  //   mean += calculateOF(s1.route);
+  // }
 
-  cout << "Mean solution: " << mean/1000 << endl;
+  // cout << "Mean solution: " << mean/1000 << endl;
 
   return 0;
 }
@@ -70,8 +70,12 @@ solutionType SA( const solutionType &initial, float T0, float SAmax, float alpha
     T *= alpha;
     iterT = 0;
     // cout << "T = " << T << "\tOF = " << solution.of << "\tbestOF " << best.of << endl;
+    if((count % 100) == 0){
+      cout << solution.of << "; " << best.of << ";" << endl;
+    }
   }
-  cout << "Count: " << count << endl;
+  cout << solution.of << "; " << best.of << ";" << endl;
+  // cout << "Count: " << count << endl;
   // cout << endl;
   return( best );
 }
