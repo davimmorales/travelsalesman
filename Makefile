@@ -4,6 +4,9 @@ simulatedAnnealingSolution:
 simulatedAnnealingSolution-berlin52: simulatedAnnealingSolution
 	bin/simulatedAnnealingSolution instances/berlin52.tsp
 
+simulatedAnnealingSolution-littleboy: simulatedAnnealingSolution
+	bin/simulatedAnnealingSolution instances/littleboy.tsp
+
 simulatedAnnealingSolution2:
 	clang++ --std=c++11 ${@}.cpp -o bin/${@}
 

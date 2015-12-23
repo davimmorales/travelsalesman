@@ -44,6 +44,7 @@ solutionType SA( const solutionType &initial, float T0, float SAmax, float alpha
   int count = 0;
   solution = initial;
   best = solution;
+  const clock_t begin_time = clock();
   while( T > 0.0001 ) {
     count++;
     while( iterT < SAmax ) {
@@ -71,10 +72,11 @@ solutionType SA( const solutionType &initial, float T0, float SAmax, float alpha
     iterT = 0;
     // cout << "T = " << T << "\tOF = " << solution.of << "\tbestOF " << best.of << endl;
     if((count % 100) == 0){
-      cout << solution.of << "; " << best.of << ";" << endl;
+      // cout << solution.of << "; " << best.of << ";" << endl;
     }
   }
   cout << solution.of << "; " << best.of << ";" << endl;
+  std::cout << "TIME: " << float( clock () - begin_time ) /  CLOCKS_PER_SEC <<endl;
   // cout << "Count: " << count << endl;
   // cout << endl;
   return( best );

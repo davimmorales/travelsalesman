@@ -8,7 +8,7 @@
 
 using namespace std;
 
-char nameRead[] = "berlin52.tsp";//instance name
+char nameRead[] = "littleboy.tsp";//instance name
 
 typedef struct{
   int id;
@@ -180,14 +180,14 @@ int main(int argc, char const *argv[]) {
   readFile();
   preProcessing();
   s1 = generateInitial();
-  s1 = SA(s1, T0, SAmax, alpha);
+  // s1 = SA(s1, T0, SAmax, alpha);
   printSolution(s1);
 
-  // for (size_t i = 0; i < 1000; i++) {
-  //   random_shuffle( s1.route.begin(), s1.route.end() );
-  //   mean += calculateOF(s1);
-  // }
-  // cout << "Mean solution: " << mean/1000 << endl;
+  for (size_t i = 0; i < 1000; i++) {
+    random_shuffle( s1.route.begin(), s1.route.end() );
+    mean += calculateOF(s1);
+  }
+  cout << "Mean solution: " << mean/1000 << endl;
 
   return 0;
 }
