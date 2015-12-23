@@ -1,0 +1,54 @@
+[morales@cerebro travelsalesman]$ make backtrackSolution-littleboy && make backtrackSolution-littleboy && make naiveSolution-littleboy && make naiveSolution-littleboy 
+clang++ --std=c++11 backtrackSolution.cpp -o bin/backtrackSolution
+bin/backtrackSolution instances/littleboy.tsp
+Mindist = 4564.46
+TIME: 22.4283
+Best solution found: 
+OF = 4564.46
+Route: 
+1 6 2 7 8 9 10 12 11 3 5 4 0 1 
+clang++ --std=c++11 backtrackSolution.cpp -o bin/backtrackSolution
+bin/backtrackSolution instances/littleboy.tsp
+Mindist = 4564.46
+TIME: 22.5526
+Best solution found: 
+OF = 4564.46
+Route: 
+1 6 2 7 8 9 10 12 11 3 5 4 0 1 
+clang++ --std=c++11 naiveSolution.cpp -o bin/naiveSolution
+bin/naiveSolution instances/littleboy.tsp
+TIME: 3349.47
+Best solution found: 
+OF = 4564.46
+Route: 
+1 6 2 7 8 9 10 12 11 3 5 4 0 
+clang++ --std=c++11 naiveSolution.cpp -o bin/naiveSolution
+bin/naiveSolution instances/littleboy.tsp
+TIME: 3360.01
+Best solution found: 
+OF = 4564.46
+Route: 
+1 6 2 7 8 9 10 12 11 3 5 4 0 
+[morales@cerebro travelsalesman]$ 
+
+[morales@cerebro travelsalesman]$ make simulatedAnnealingSolution-littleboy && make simulatedAnnealingSolution-littleboy 
+clang++ --std=c++11 simulatedAnnealingSolution.cpp -o bin/simulatedAnnealingSolution
+bin/simulatedAnnealingSolution instances/littleboy.tsp
+4660.45; 4660.45;
+TIME: 726.597
+Best solution found: 
+OF = 4660.45
+Route: 
+7 8 9 3 12 10 11 5 4 0 6 1 2 
+clang++ --std=c++11 simulatedAnnealingSolution.cpp -o bin/simulatedAnnealingSolution
+bin/simulatedAnnealingSolution instances/littleboy.tsp
+4614.02; 4614.02;
+TIME: 726.275
+Best solution found: 
+OF = 4614.02
+Route: 
+3 11 10 12 0 1 6 2 7 8 9 4 5 
+[morales@cerebro travelsalesman]$ 
+
+
+
